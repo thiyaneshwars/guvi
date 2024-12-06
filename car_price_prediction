@@ -1,0 +1,42 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+data = pd.read_csv(r"C:\Users\thiya\Downloads\archive (2)\car_price_prediction.csv")
+print(data.head)
+df = data.drop(columns=['ID','Doors','Levy'])
+df['Engine volume']=df['Engine volume'].str.replace('Turbo','')
+df['Engine volume']=pd.to_numeric(df['Engine volume'])
+df['Mileage']=df['Mileage'].str.split(" ",expand=True)[0]
+df['Mileage']=pd.to_numeric(df['Mileage'])
+df['Engine volume'].unique()
+df.head(3)
+df.info()
+df.head(3)
+df=pd.get_dummies(df,columns=['Manufacturer','Model','Category','Leather interior','Fuel type','Gear box type','Wheel','Color','Drive wheels'])
+y=df['Price']
+x=df.drop('Price',axis=1)
+lr=LinearRegression()
+model=lr.fit(x,y)
+y=df['Price']
+x=df.drop('Price',axis=1)
+lr=LinearRegression()
+model=lr.fit(x,y)
+m=model.score(x,y)
+y=df['Price']
+x=df.drop('Price',axis=1)
+mea=mean_absolute_error(y,m)
+print(mea)
+rf=RandomForestRegressor()
+model=rf.fit(x,y)
+model.score(x,y)
+x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.75,random_state=66)
+print(df.shape)
+print(x.shape)
+print(y.shape)
+print(x_train.shape)
+rf=RandomForestRegressor()
+model=rf.fit(x_train,y_train)
+print(model.score(x_test,y_test))
